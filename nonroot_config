@@ -1,0 +1,70 @@
+# Copyright (c), 2014 Genome Research Ltd (GRL).
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials
+#       provided with the distribution.
+#
+#     * Neither the name of the Genome Research Limited nor the
+#       names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior
+#       written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY GRL ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL GRL BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+# OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Minimal nginx configuration to allow running as an ordinary user
+
+# Comment this out to enable daemon mode (i.e. run in the background)
+daemon off;
+
+# Cull the error log.  Change this to a real file name if you have trouble
+# starting up.
+error_log /dev/null;
+
+# Where to put the file containing the nginx process id.
+pid /dev/null;
+
+# Working directory for the nginx process.  It doesn't normally write here
+# but it is needed if (for example) it aborts and dumps core.
+working_directory /tmp;
+
+# Use defaults for the 'events' section, but it has to be present.
+events {
+}
+
+# HTTP server settings go in here
+http {
+   # Set mime type for served pages
+   types { }
+   default_type text/plain;
+
+   # Where to store large request bodies.  As we limit this to 1k hopefully
+   # the directory will never be used.  It has to exist and be writable though.
+   client_body_temp_path /tmp;
+   client_max_body_size 1k;
+
+   # The same for fastcgi, which we also don't use.
+   fastcgi_temp_path /tmp;
+   fastcgi_max_temp_file_size 0;
+   
+   # Include the actual configuration file.
+   include cram_cache_svr.conf;
+}
